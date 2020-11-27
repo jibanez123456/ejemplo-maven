@@ -1,5 +1,5 @@
 # Getting Started
-# Updated for session 5
+
 ## Windows
 
 ### Compile Code
