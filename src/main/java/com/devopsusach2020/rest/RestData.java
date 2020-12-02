@@ -1,5 +1,6 @@
 package com.devopsusach2020.rest;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.devopsusach2020.model.Pais;
+import com.devopsusach2020.model.PaisChile;
 import com.devopsusach2020.model.Mundial;
 import com.google.gson.Gson;
+
 
 @RestController
 @RequestMapping(path = "/rest/mscovid")
@@ -22,7 +25,7 @@ public class RestData {
 	
 	private final static Logger LOGGER = Logger.getLogger("devops.subnivel.Control");
 
-	
+
 	@GetMapping(path = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Pais getData(@RequestParam(name = "msg") String message){
 		
@@ -46,7 +49,7 @@ public class RestData {
 		int death = 0;
 		int recovered = 0;
 		Gson gson = new Gson();
-        Pais[] estados = gson.fromJson(call.getBody().toLowerCase(), Pais[].class);
+		Pais[] estados = gson.fromJson(Objects.requireNonNull(call.getBody()).toLowerCase(), Pais[].class);
 
         for(Pais estado : estados) {
         	response.setDate(estado.getDate());
@@ -65,6 +68,48 @@ public class RestData {
 		return response;		
 	}
 	
+	@GetMapping(path = "/estadoChile", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody PaisChile getTotalChile(@RequestParam(name = "CHILE") String message){
+		RestTemplate restTemplate = new RestTemplate();
+	    ResponseEntity<String> call= restTemplate.getForEntity("https://api.covid19api.com/live/country/" + message ,String.class);
+	    
+	    LOGGER.log(Level.INFO, "Consulta por Chile");
+	    
+		PaisChile response = new PaisChile();
+		// PaisChile responseVar = new PaisChile();
+		int confirmed = 0;
+		int death = 0;
+		int recovered = 0;
+		Gson gson = new Gson();
+		
+		try {
+			// responseVar = Objects.requireNonNull(call.getBody()).toLowerCase();
+			PaisChile[] estados = gson.fromJson(Objects.requireNonNull(call.getBody()).toLowerCase(), PaisChile[].class);
+
+			for(PaisChile estado : estados) {
+				response.setDate(estado.getDate());
+				response.setActive(estado.getActive());
+				confirmed += estado.getConfirmed();
+				death += estado.getDeaths();
+				recovered += estado.getRecovered();
+			}
+
+			response.setConfirmed(confirmed);
+			response.setDeaths(death);
+			response.setRecovered(recovered);
+			response.setCountry(message);
+			response.setMensaje("ok");
+
+			return response;
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Error NullPointerException");
+			return null;
+
+		}
+	}
+
+	
 
 	@GetMapping(path = "/estadoMundial", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Mundial getTotalMundial(){
@@ -75,7 +120,8 @@ public class RestData {
 	    ResponseEntity<String> call= restTemplate.getForEntity("https://api.covid19api.com/world/total" ,String.class);
 	    Mundial response = new Mundial();
 		Gson gson = new Gson();
-        Mundial estado = gson.fromJson(call.getBody().toLowerCase(), Mundial.class);
+		Mundial estado = gson.fromJson(Objects.requireNonNull(call.getBody()).toLowerCase(), Mundial.class);
+
         response.setTotalConfirmed(estado.getTotalConfirmed());
         response.setTotalDeaths(estado.getTotalDeaths());
         response.setTotalRecovered(estado.getTotalRecovered());
