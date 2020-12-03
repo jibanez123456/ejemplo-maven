@@ -4,28 +4,28 @@ pipeline {
     stages {
         stage('compile-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\ejemplo-maven') {
+                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh './mvnw clean compile -e'
 				}
             }
         }
 		stage('test-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\ejemplo-maven') {
+                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh './mvnw clean test -e'
 				}
             }
         }
 		stage('jar-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\ejemplo-maven') {
+                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh './mvnw clean package -e'
 				}
             }
         }
 		stage('run-jar') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\ejemplo-maven') {
+                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh 'nohup bash mvnw spring-boot:run &'
 				}
             }
