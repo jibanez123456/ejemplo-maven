@@ -26,12 +26,12 @@ pipeline {
 	}
 	stage('run-jar') {
             steps {
-		sh 'nohup bash mvnw spring-boot:run &'
+		sh 'nohup bash mvn spring-boot:run &'
             }
         }
         stage('testing-aplication') {
             steps {
-		  sh 'sleep 60'
+		  sh 'sleep 10'
 		  sh 'curl -X GET http://localhost:8081/rest/mscovid/test?msg=testing'
             }
         }
