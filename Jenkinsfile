@@ -9,21 +9,21 @@ pipeline {
 				}
             }
         }
-		stage('test-code') {
+	stage('test-code') {
             steps {
                 dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh './mvnw clean test -e'
 				}
             }
         }
-		stage('jar-code') {
+	stage('jar-code') {
             steps {
                 dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh './mvnw clean package -e'
 				}
             }
         }
-		stage('run-jar') {
+	stage('run-jar') {
             steps {
                 dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
 					sh 'nohup bash mvnw spring-boot:run &'
@@ -40,5 +40,10 @@ pipeline {
 					sh 'curl -X GET http://localhost:8081/rest/mscovid/test?msg=testing'
             }
         }
-    }
+	stage('SonarQube analysis') {
+    		withSonarQubeEnv(installationName: 'sonar') { 
+      		   sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+    		}
+	}
+   }
 }
