@@ -4,37 +4,30 @@ pipeline {
     stages {
         stage('compile-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
-					sh './mvnw clean compile -e'
-				}
+		sh './mvnw clean compile -e'		
             }
         }
 	stage('test-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
-					sh './mvnw clean test -e'
-				}
+		sh './mvnw clean test -e'
             }
         }
 	stage('jar-code') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
-					sh './mvnw clean package -e'
-				}
+		sh './mvnw clean package -e'
             }
         }
         stage('SonarQube analysis') {
 	     steps {
     		   withSonarQubeEnv(installationName: 'sonar') { 
-      		    sh './mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+      		    // sh './mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+	            sh './mvn '
     		   }
 	     }
 	}
 	stage('run-jar') {
             steps {
-                dir('C:\\Users\\jibanez\\DevOps\\Sesion5\\ejemplo-maven') {
-					sh 'nohup bash mvnw spring-boot:run &'
-				}
+		sh 'nohup bash mvnw spring-boot:run &'
             }
         }
         stage('esperando...') {
