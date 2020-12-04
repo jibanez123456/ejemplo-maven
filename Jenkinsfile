@@ -31,7 +31,7 @@ pipeline {
         }
         stage('esperando...') {
             steps {
-                  sh 'sleep 15'
+                  sh 'sleep 20'
             }
         }
         stage('testing-aplication') {
