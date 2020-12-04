@@ -4,24 +4,23 @@ pipeline {
     stages {
         stage('compile-code') {
             steps {
-		sh './mvnw clean compile -e'		
+		sh 'mvn clean compile -e'		
             }
         }
 	stage('test-code') {
             steps {
-		sh './mvnw clean test -e'
+		sh 'mvn clean test -e'
             }
         }
 	stage('jar-code') {
             steps {
-		sh './mvnw clean package -e'
+		sh 'mvn clean package -e'
             }
         }
         stage('SonarQube analysis') {
 	     steps {
     		   withSonarQubeEnv(installationName: 'sonar') { 
-      		    // sh './mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-	            sh './mvn '
+      		    sh './mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
     		   }
 	     }
 	}
